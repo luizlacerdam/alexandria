@@ -1,6 +1,7 @@
 package com.betrybe.alexandria.service;
 
 import com.betrybe.alexandria.models.entities.Book;
+import com.betrybe.alexandria.models.entities.BookDetail;
 import com.betrybe.alexandria.models.repositories.BookDetailRepository;
 import com.betrybe.alexandria.models.repositories.BookRepository;
 import java.util.List;
@@ -57,5 +58,41 @@ public class BookService {
 
   public List<Book> getAllBooks() {
     return bookRepository.findAll();
+  }
+
+  public BookDetail insertBookDetail(BookDetail bookDetail) {
+    return bookDetailRepository.save(bookDetail);
+  }
+
+  public Optional<BookDetail> updateBookDetail(Long id, BookDetail bookDetail) {
+    Optional<BookDetail> optionalBookDetail = bookDetailRepository.findById(id);
+
+    if(optionalBookDetail.isPresent()) {
+      BookDetail bookDetailFromDB = optionalBookDetail.get();
+      bookDetailFromDB.setSummary(bookDetail.getSummary());
+      bookDetailFromDB.setPageCount(bookDetail.getPageCount());
+      bookDetailFromDB.setYear(bookDetail.getYear());
+      bookDetailFromDB.setIsbn(bookDetail.getIsbn());
+
+      BookDetail updatedBookDetail = bookDetailRepository.save(bookDetailFromDB);
+      return Optional.of(updatedBookDetail);
+
+    }
+
+    return optionalBookDetail;
+  }
+
+  public Optional<BookDetail> removeBookDetailById(Long id) {
+    Optional<BookDetail> bookDetailOptional = bookDetailRepository.findById(id);
+
+    if(bookDetailOptional.isPresent()) {
+      bookDetailRepository.deleteById(id);
+    }
+
+    return bookDetailOptional;
+  }
+
+  public Optional<BookDetail> getBookDetailById(Long id) {
+    return bookDetailRepository.findById(id);
   }
 }
