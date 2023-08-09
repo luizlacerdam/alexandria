@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -45,6 +46,20 @@ public class BookController {
 
     ResponseDTO<Book> responseDTO = new ResponseDTO<>(
         "Livro atualizado com sucesso!", optionalBook.get());
+    return ResponseEntity.ok(responseDTO);
+  }
+
+  @DeleteMapping("/{bookId}")
+  public ResponseEntity<ResponseDTO<Book>> removeBookById(@PathVariable Long bookId) {
+    Optional<Book> optionalBook = bookService.removeBookById(bookId);
+
+    if (optionalBook.isEmpty()) {
+      ResponseDTO<Book> responseDTO = new ResponseDTO<>(
+          String.format("Não foi encontrado o livro de ID %d", bookId), null);
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+    }
+
+    ResponseDTO<Book> responseDTO = new ResponseDTO<>("Livro removido com sucesso!", null);
     return ResponseEntity.ok(responseDTO);
   }
 }
