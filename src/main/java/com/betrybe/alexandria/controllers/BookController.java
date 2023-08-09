@@ -4,7 +4,9 @@ import com.betrybe.alexandria.controllers.dto.BookDTO;
 import com.betrybe.alexandria.controllers.dto.ResponseDTO;
 import com.betrybe.alexandria.models.entities.Book;
 import com.betrybe.alexandria.service.BookService;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,5 +78,13 @@ public class BookController {
 
     ResponseDTO<Book> responseDTO = new ResponseDTO<>("Livro encontrado com sucesso!", optionalBook.get());
     return ResponseEntity.ok(responseDTO);
+  }
+
+  @GetMapping()
+  public List<BookDTO> getAllBooks() {
+    List<Book> allBooks = bookService.getAllBooks();
+    return allBooks.stream()
+        .map((book) -> new BookDTO(book.getId(), book.getTitle(), book.getGenre()))
+        .collect(Collectors.toList());
   }
 }
