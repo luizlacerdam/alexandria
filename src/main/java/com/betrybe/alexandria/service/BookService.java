@@ -1,6 +1,7 @@
 package com.betrybe.alexandria.service;
 
 import com.betrybe.alexandria.models.entities.Book;
+import com.betrybe.alexandria.models.repositories.BookDetailRepository;
 import com.betrybe.alexandria.models.repositories.BookRepository;
 import java.util.List;
 import java.util.Optional;
@@ -10,11 +11,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class BookService {
 
-  private BookRepository bookRepository;
+  private final BookRepository bookRepository;
+
+  private final BookDetailRepository bookDetailRepository;
 
   @Autowired
-  public BookService(BookRepository bookRepository) {
+  public BookService(BookRepository bookRepository, BookDetailRepository bookDetailRepository) {
     this.bookRepository = bookRepository;
+    this.bookDetailRepository = bookDetailRepository;
   }
 
   public Book insertBook(Book book) {
