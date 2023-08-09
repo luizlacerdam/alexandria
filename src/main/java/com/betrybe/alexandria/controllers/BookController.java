@@ -1,8 +1,10 @@
 package com.betrybe.alexandria.controllers;
 
 import com.betrybe.alexandria.controllers.dto.BookDTO;
+import com.betrybe.alexandria.controllers.dto.BookDetailDTO;
 import com.betrybe.alexandria.controllers.dto.ResponseDTO;
 import com.betrybe.alexandria.models.entities.Book;
+import com.betrybe.alexandria.models.entities.BookDetail;
 import com.betrybe.alexandria.service.BookService;
 import java.util.List;
 import java.util.Optional;
@@ -86,5 +88,55 @@ public class BookController {
     return allBooks.stream()
         .map((book) -> new BookDTO(book.getId(), book.getTitle(), book.getGenre()))
         .collect(Collectors.toList());
+  }
+
+  @PostMapping("/detail/")
+  public ResponseEntity<ResponseDTO<BookDetail>> createBook(@RequestBody BookDetailDTO bookDetailDTO) {
+    Book newBook = bookService.insertBookDetail(bookDetailDTO.toBook());
+    ResponseDTO<Book> responseDTO = new ResponseDTO<>("Livro criado com sucesso!", newBook);
+    return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+  }
+
+  @PutMapping("/{bookId}")
+  public ResponseEntity<ResponseDTO<Book>> updateBook(@PathVariable Long bookId, @RequestBody BookDTO bookDTO) {
+    Optional<Book> optionalBook = bookService.updateBook(bookId, bookDTO.toBook());
+
+    if (optionalBook.isEmpty()) {
+      ResponseDTO<Book> responseDTO = new ResponseDTO<>(
+          String.format("Não foi encontrado o livro de ID %d", bookId), null);
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+    }
+
+    ResponseDTO<Book> responseDTO = new ResponseDTO<>(
+        "Livro atualizado com sucesso!", optionalBook.get());
+    return ResponseEntity.ok(responseDTO);
+  }
+
+  @DeleteMapping("/{bookId}")
+  public ResponseEntity<ResponseDTO<Book>> removeBookById(@PathVariable Long bookId) {
+    Optional<Book> optionalBook = bookService.removeBookById(bookId);
+
+    if (optionalBook.isEmpty()) {
+      ResponseDTO<Book> responseDTO = new ResponseDTO<>(
+          String.format("Não foi encontrado o livro de ID %d", bookId), null);
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+    }
+
+    ResponseDTO<Book> responseDTO = new ResponseDTO<>("Livro removido com sucesso!", null);
+    return ResponseEntity.ok(responseDTO);
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<ResponseDTO<Book>> getBookById(@PathVariable Long bookId) {
+    Optional<Book> optionalBook = bookService.getBookById(bookId);
+
+    if (optionalBook.isEmpty()) {
+      ResponseDTO<Book> responseDTO = new ResponseDTO<>(
+          String.format("Não foi encontrado o livro de ID %d", bookId), null);
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+    }
+
+    ResponseDTO<Book> responseDTO = new ResponseDTO<>("Livro encontrado com sucesso!", optionalBook.get());
+    return ResponseEntity.ok(responseDTO);
   }
 }
