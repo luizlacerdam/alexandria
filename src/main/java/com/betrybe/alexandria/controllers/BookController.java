@@ -90,53 +90,53 @@ public class BookController {
         .collect(Collectors.toList());
   }
 
-  @PostMapping("/detail/")
-  public ResponseEntity<ResponseDTO<BookDetail>> createBook(@RequestBody BookDetailDTO bookDetailDTO) {
-    Book newBook = bookService.insertBookDetail(bookDetailDTO.toBook());
-    ResponseDTO<Book> responseDTO = new ResponseDTO<>("Livro criado com sucesso!", newBook);
+  @PostMapping("/{bookId}/details/")
+  public ResponseEntity<ResponseDTO<BookDetail>> createBookDetail(@RequestBody BookDetailDTO bookDetailDTO) {
+    BookDetail newBookDetail = bookService.insertBookDetail(bookDetailDTO.toBookDetail());
+    ResponseDTO<BookDetail> responseDTO = new ResponseDTO<>("Detalhe de livro criado com sucesso!", newBookDetail);
     return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
   }
 
-  @PutMapping("/{bookId}")
-  public ResponseEntity<ResponseDTO<Book>> updateBook(@PathVariable Long bookId, @RequestBody BookDTO bookDTO) {
-    Optional<Book> optionalBook = bookService.updateBook(bookId, bookDTO.toBook());
+  @PutMapping("/{bookId}/details/{id}")
+  public ResponseEntity<ResponseDTO<BookDetail>> updateBookDetail(@PathVariable Long id, @RequestBody BookDetailDTO bookDetailDTO) {
+    Optional<BookDetail> optionalBookDetail = bookService.updateBookDetail(id, bookDetailDTO.toBookDetail());
 
-    if (optionalBook.isEmpty()) {
-      ResponseDTO<Book> responseDTO = new ResponseDTO<>(
-          String.format("Não foi encontrado o livro de ID %d", bookId), null);
+    if (optionalBookDetail.isEmpty()) {
+      ResponseDTO<BookDetail> responseDTO = new ResponseDTO<>(
+          String.format("Não foi encontrado nenhum detalhe do livro de ID %d", id), null);
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
     }
 
-    ResponseDTO<Book> responseDTO = new ResponseDTO<>(
-        "Livro atualizado com sucesso!", optionalBook.get());
+    ResponseDTO<BookDetail> responseDTO = new ResponseDTO<>(
+        "Livro atualizado com sucesso!", optionalBookDetail.get());
     return ResponseEntity.ok(responseDTO);
   }
 
-  @DeleteMapping("/{bookId}")
-  public ResponseEntity<ResponseDTO<Book>> removeBookById(@PathVariable Long bookId) {
-    Optional<Book> optionalBook = bookService.removeBookById(bookId);
+  @DeleteMapping("/{bookId}/details/{id}")
+  public ResponseEntity<ResponseDTO<BookDetail>> removeBookDetailById(@PathVariable Long id) {
+    Optional<BookDetail> optionalBookDetail = bookService.removeBookDetailById(id);
 
-    if (optionalBook.isEmpty()) {
-      ResponseDTO<Book> responseDTO = new ResponseDTO<>(
-          String.format("Não foi encontrado o livro de ID %d", bookId), null);
+    if (optionalBookDetail.isEmpty()) {
+      ResponseDTO<BookDetail> responseDTO = new ResponseDTO<>(
+          String.format("Não foi encontrado o detalhe do livro de ID %d", id), null);
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
     }
 
-    ResponseDTO<Book> responseDTO = new ResponseDTO<>("Livro removido com sucesso!", null);
+    ResponseDTO<BookDetail> responseDTO = new ResponseDTO<>("Detalhe do livro removido com sucesso!", null);
     return ResponseEntity.ok(responseDTO);
   }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<ResponseDTO<Book>> getBookById(@PathVariable Long bookId) {
-    Optional<Book> optionalBook = bookService.getBookById(bookId);
+  @GetMapping("/{bookId}/details/{id}")
+  public ResponseEntity<ResponseDTO<BookDetail>> getBookDetailById(@PathVariable Long id) {
+    Optional<BookDetail> optionalBookDetail = bookService.getBookDetailById(id);
 
-    if (optionalBook.isEmpty()) {
-      ResponseDTO<Book> responseDTO = new ResponseDTO<>(
-          String.format("Não foi encontrado o livro de ID %d", bookId), null);
+    if (optionalBookDetail.isEmpty()) {
+      ResponseDTO<BookDetail> responseDTO = new ResponseDTO<>(
+          String.format("Não foi encontrado o detalhe do livro de ID %d", id), null);
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
     }
 
-    ResponseDTO<Book> responseDTO = new ResponseDTO<>("Livro encontrado com sucesso!", optionalBook.get());
+    ResponseDTO<BookDetail> responseDTO = new ResponseDTO<>("Livro encontrado com sucesso!", optionalBookDetail.get());
     return ResponseEntity.ok(responseDTO);
   }
 }
