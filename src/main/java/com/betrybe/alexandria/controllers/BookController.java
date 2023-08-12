@@ -175,4 +175,16 @@ public class BookController {
 
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
   }
+
+  @PutMapping("/{bookId}/author/{authorId}")
+  public ResponseEntity<ResponseDTO<Book>> setAuthor(@PathVariable Long bookId, @PathVariable Long authorId ) {
+
+    bookService.setAuthor(bookId, authorId);
+    return null;
+  }
+
+  @DeleteMapping("/{bookId}/author/{authorId}")
+  public ResponseEntity<ResponseDTO<Book>> removeAuthor(@PathVariable Long bookId, @PathVariable Long authorId ) {
+    return null;
+  }
 }

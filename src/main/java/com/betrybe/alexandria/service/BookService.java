@@ -1,5 +1,6 @@
 package com.betrybe.alexandria.service;
 
+import com.betrybe.alexandria.models.entities.Author;
 import com.betrybe.alexandria.models.entities.Book;
 import com.betrybe.alexandria.models.entities.BookDetail;
 import com.betrybe.alexandria.models.entities.Publisher;
@@ -21,12 +22,15 @@ public class BookService {
 
   private final PublisherRepository publisherRepository;
 
+  private final AuthorRepository authorRepository;
+
   @Autowired
   public BookService(BookRepository bookRepository, BookDetailRepository bookDetailRepository,
       PublisherRepository publisherRepository, AuthorRepository authorRepository) {
     this.bookRepository = bookRepository;
     this.bookDetailRepository = bookDetailRepository;
     this.publisherRepository = publisherRepository;
+    this.authorRepository = authorRepository;
   }
 
   public Book insertBook(Book book) {
@@ -147,6 +151,25 @@ public class BookService {
     book.setPublisher(null);
 
     Book newBook = bookRepository.save(book);
+    return Optional.of(newBook);
+  }
+
+  public Optional<Book> setAuthor(Long bookId, Long authorId) {
+    Optional<Book> optionalBook = bookRepository.findById(bookId);
+    if(optionalBook.isEmpty()) {
+      return Optional.empty();
+    }
+    Optional<Author> optionalAuthor = authorRepository.findById(authorId);
+    if(optionalAuthor.isEmpty()) {
+      return Optional.empty();
+    }
+
+    Book book = optionalBook.get();
+    Author author = optionalAuthor.get();
+
+    book.getAuthors().add(author);
+    Book newBook = bookRepository.save(book);
+
     return Optional.of(newBook);
   }
 }
