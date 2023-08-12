@@ -191,5 +191,12 @@ public class BookController {
   @DeleteMapping("/{bookId}/author/{authorId}")
   public ResponseEntity<ResponseDTO<Book>> removeAuthor(@PathVariable Long bookId, @PathVariable Long authorId ) {
     Optional<Book> optionalBook = bookService.removeAuthor(bookId, authorId);
+
+    if(optionalBook.isEmpty()) {
+      ResponseDTO<Book> responseDTO = new ResponseDTO<>("Não foi possível fazer a remoção.", null);
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+    }
+    ResponseDTO<Book> responseDTO = new ResponseDTO<>("Remoção de associação feita com sucesso!", optionalBook.get());
+    return ResponseEntity.ok(responseDTO);
   }
 }
