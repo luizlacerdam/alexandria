@@ -178,9 +178,14 @@ public class BookController {
 
   @PutMapping("/{bookId}/author/{authorId}")
   public ResponseEntity<ResponseDTO<Book>> setAuthor(@PathVariable Long bookId, @PathVariable Long authorId ) {
+    Optional<Book> optionalBook = bookService.setAuthor(bookId, authorId);
 
-    bookService.setAuthor(bookId, authorId);
-    return null;
+    if(optionalBook.isEmpty()) {
+      ResponseDTO<Book> responseDTO = new ResponseDTO<>("Não foi possível fazer a associação.", null);
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDTO);
+    }
+    ResponseDTO<Book> responseDTO = new ResponseDTO<>("Associação feita com sucesso!", optionalBook.get());
+    return ResponseEntity.ok(responseDTO);
   }
 
   @DeleteMapping("/{bookId}/author/{authorId}")
