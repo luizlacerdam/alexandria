@@ -172,4 +172,23 @@ public class BookService {
 
     return Optional.of(newBook);
   }
+
+  public Optional<Book> removeAuthor(Long bookId, Long authorId) {
+    Optional<Book> optionalBook = bookRepository.findById(bookId);
+    if(optionalBook.isEmpty()) {
+      return Optional.empty();
+    }
+    Optional<Author> optionalAuthor = authorRepository.findById(authorId);
+    if(optionalAuthor.isEmpty()) {
+      return Optional.empty();
+    }
+
+    Book book = optionalBook.get();
+    Author author = optionalAuthor.get();
+
+    book.getAuthors().remove(author);
+    Book newBook = bookRepository.save(book);
+
+    return Optional.of(newBook);
+  }
 }

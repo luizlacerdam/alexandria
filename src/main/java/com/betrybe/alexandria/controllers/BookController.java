@@ -190,6 +190,6 @@ public class BookController {
 
   @DeleteMapping("/{bookId}/author/{authorId}")
   public ResponseEntity<ResponseDTO<Book>> removeAuthor(@PathVariable Long bookId, @PathVariable Long authorId ) {
-    return null;
+    Optional<Book> optionalBook = bookService.removeAuthor(bookId, authorId);
   }
 }
