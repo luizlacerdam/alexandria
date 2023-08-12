@@ -91,4 +91,7 @@ public class Book {
     this.authors = authors;
   }
 
+  public void setPublisher(Publisher publisher) {
+    this.publisher = publisher;
+  }
 }
