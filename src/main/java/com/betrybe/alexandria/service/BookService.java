@@ -1,5 +1,6 @@
 package com.betrybe.alexandria.service;
 
+import com.betrybe.alexandria.controllers.dto.BookDTO;
 import com.betrybe.alexandria.models.entities.Author;
 import com.betrybe.alexandria.models.entities.Book;
 import com.betrybe.alexandria.models.entities.BookDetail;
@@ -8,9 +9,13 @@ import com.betrybe.alexandria.models.repositories.AuthorRepository;
 import com.betrybe.alexandria.models.repositories.BookDetailRepository;
 import com.betrybe.alexandria.models.repositories.BookRepository;
 import com.betrybe.alexandria.models.repositories.PublisherRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -67,8 +72,18 @@ public class BookService {
     return bookRepository.findById(id);
   }
 
-  public List<Book> getAllBooks() {
-    return bookRepository.findAll();
+  public List<BookDTO> getAllBooks(int pageNumber, int pageSize) {
+    List<BookDTO> booksDTOList = new ArrayList<>();
+
+    Pageable pageable = PageRequest.of(pageNumber, pageSize);
+    Page<Book> books = bookRepository.findAll(pageable);
+
+    books.forEach((book) -> {
+      BookDTO bookDTO = new BookDTO(book.getId(), book.getTitle(), book.getGenre());
+      booksDTOList.add(bookDTO);
+    });
+
+    return booksDTOList;
   }
 
   public Optional<BookDetail> insertBookDetail(Long bookId, BookDetail bookDetail) {
